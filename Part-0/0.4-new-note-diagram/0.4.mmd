@@ -1,0 +1,34 @@
+sequenceDiagram
+    participant browser
+    participant server
+
+    browser ->> server: POST https://studies.cs.helsinki.fi/exampleapp/new_note 
+    activate server
+    server -->> browser: Return text/html [ status code 302 Found ] 
+    deactivate server
+
+    Note right of browser: Server provides with redirect response header to location /exampleapp/notes
+
+    browser ->> server: GET https://studies.cs.helsinki.fi/exampleapp/notes
+    activate server
+    server -->> browser: Return HTML document [ status code 200 OK ]
+    deactivate server
+
+    browser ->> server: GET https://studies.cs.helsinki.fi/exampleapp/main.css
+    activate server
+    server -->> browser: css is rendered
+    deactivate server
+
+    browser ->> server: GET https://studies.cs.helsinki.fi/exampleapp/main.js
+    activate server
+    server -->> browser: return javascript file 
+    deactivate server
+
+    Note right of browser: browser starts executing javascript code which fetches the data.json file from server
+
+    browser ->> server: GET https://studies.cs.helsinki.fi/exampleapp/data.json
+    activate server
+    server -->> browser: Return JSON ( [{ "content": "ultrakill","date": "2026-04-"}...] )
+    deactivate server
+
+    Note right of browser: browser executes the callback function that renders the notes

@@ -1,0 +1,14 @@
+sequenceDiagram
+    participant browser
+    participant server
+
+    Note right of browser: While creating new note and hit save button at https://studies.cs.helsinki.fi/exampleapp/spa
+
+    browser ->> server: POST https://studies.cs.helsinki.fi/exampleapp/new_note_spa
+    Note right of browser: browser sends input payload as app/json data to server
+    activate server
+    server -->> browser: Return response {"message":"note created"} with [ status code 201 Created ]
+    Note left of server: Server reads the header and doesn't need redirect
+    deactivate server
+
+    Note right of browser: Browser stays on same page with new notes data and no further HTTP request is send to Server

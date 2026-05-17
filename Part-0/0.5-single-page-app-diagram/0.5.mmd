@@ -1,0 +1,27 @@
+sequenceDiagram
+    participant browser
+    participant server
+
+    browser ->> server: GET https://studies.cs.helsinki.fi/exampleapp/spa
+    activate server
+    server -->> browser: Return HTML document [ status code 200 OK ]
+    deactivate server
+
+    browser ->> server: GET https://studies.cs.helsinki.fi/exampleapp/main.css
+    activate server
+    server -->> browser: CSS file is rendered
+    deactivate server
+
+    browser ->> server: GET https://studies.cs.helsinki.fi/exampleapp/spa.js
+    activate server
+    server -->> browser: return spa javascript file 
+    deactivate server
+
+    Note right of browser: browser starts executing javascript code which fetches the data.json file from server
+
+    browser ->> server: GET https://studies.cs.helsinki.fi/exampleapp/data.json
+    activate server
+    server -->> browser: Return JSON ( [{ "content": "ultrakill","date": "2026-04-"}...] )
+    deactivate server
+
+    Note right of browser: browser executes the callback function that renders the notes from JSON file
