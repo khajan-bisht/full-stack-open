@@ -1,0 +1,15 @@
+{
+  "persons": [
+    {
+      "name": "James Bond",
+      "number": "111121212",
+      "id": "fT5qkEjJ2sA"
+    },
+    {
+      "name": "Captain Finland",
+      "number": "001001001",
+      "id": "VCLnLjeruf4"
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
+}
