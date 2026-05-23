@@ -26,13 +26,7 @@ const App = () => {
         setPersons(initialPersons)
       })
       .catch(() => {
-        setNotification({
-          message: 'Could not load contacts from server',
-          type: 'error',
-        })
-        setTimeout(() => {
-          setNotification(null)
-        }, 5000)
+        notify(`Could not load contacts from serer`, 'error')
       })
   }, [])
 
@@ -65,14 +59,11 @@ const App = () => {
           setNewName('')
           setNewNumber('')
         })
-        .catch(() => {
-          notify(
-            `Information of ${personAlreadyExists.name} has already been removed from server`,
-            'error'
-          )
-          setPersons(
+        .catch(error => {
+          notify(error.response.data.error, 'error')
+         /* setPersons(
             persons.filter((person) => person.id !== personAlreadyExists.id)
-          )
+          )*/
         })
       return
     }
@@ -81,6 +72,7 @@ const App = () => {
       name: newName,
       number: newNumber,
     }
+
     personsService
       .create(personObject)
       .then((returnPerson) => {
@@ -89,20 +81,20 @@ const App = () => {
         setNewName('')
         setNewNumber('')
       })
-      .catch(() => {
-        notify(`Could not create ${newName}`, 'error')
+      .catch(error => {
+        notify(error.response.data.error, 'error')
       })
   }
 
-  const deletePerson = (id) => {
-    const name = persons.find((person) => person.id === id).name
+  const deletePerson = (id, name) => {
+    //const name = persons.find((person) => person.id === id).name
     if (!window.confirm(`Delete ${name}?`)) return
 
     personsService
       .remove(id)
       .then(() => {
         setPersons(persons.filter((person) => person.id !== id))
-        notify(`Information of ${name} has been removed from server`, 'success')
+        notify(`Deleted ${name} from server`, 'success')
       })
       .catch(() => {
         notify(`Information of ${name} has already been removed from server`, 'error')
@@ -128,7 +120,7 @@ const App = () => {
   return (
     
     <div>
-      <h2>Phonebook contacts</h2>
+      <h2>Phonebook</h2>
       <Notification notification={notification} />
       <Filter filter={filter} handleFilterChange={handleFilterChange} />
       <h3>add a new</h3>
