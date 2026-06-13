@@ -1,21 +1,6 @@
-
-require('dotenv').config()
-
 const mongoose = require('mongoose')
+
 mongoose.set('strictQuery', false)
-
-// export MONGODB_URI=mongodb+srv://<username>:<password>@<cluster-url>/<database-name>
-const url = process.env.MONGODB_URI
-
-console.log('connecting to', url)
-
-mongoose.connect(url, { family: 4 })
-  .then(() => {
-    console.log('connected to MongoDB')
-  })
-  .catch(error => {
-    console.log('error connecting to MongoDB:', error.message)
-  })
 
 const blogSchema = new mongoose.Schema({
     title: String,
