@@ -51,12 +51,30 @@ describe('Create new blog post test', () => {
       .send(newBlog)
       .expect(201)
       .expect('Content-Type', /application\/json/)
-    
+
     const blogAtEnd = await helper.blogInDb()
     assert.strictEqual(blogAtEnd.length, helper.initialBlogs.length + 1)
 
     const titleAtEnd = blogAtEnd.map((n) => n.title)
     assert(titleAtEnd.includes('Test new bogpost feat'))
+  })
+
+  test('test like value default to 0', async () => {
+    const blogWithoutLike =  {
+      title: 'Test new bogpost feature without like',
+      author: 'Khajan',
+      url: 'https://test.com/'
+    }
+
+    const response = await api.post('/api/blogs')
+      .send(blogWithoutLike)
+      .expect(201)
+      .expect('Content-Type', /application\/json/)
+
+    const allBlogData = await helper.blogInDb()
+    const updatedBlogId = allBlogData.find((n) => n.id === response.body.id )
+
+    assert.strictEqual(updatedBlogId.likes, 0)
   })
 
 })
