@@ -13,7 +13,7 @@ beforeEach(async () => {
   await Blog.insertMany(helper.initialBlogs)
 })
 
-describe('Blogs tests', () => {
+describe('When blogs are initally saved to test db', () => {
   test('blogs are returned as json', async () => {
     await api
       .get('/api/blogs')
@@ -27,7 +27,7 @@ describe('Blogs tests', () => {
     assert.strictEqual(response.body.length, helper.initialBlogs.length)
   })
 
-  test('unique id of blog post', async () => {
+  test('Check each blog post has unique id defined', async () => {
     const response = await api.get('/api/blogs')
 
     response.body.forEach(blog => {
@@ -35,10 +35,11 @@ describe('Blogs tests', () => {
       assert.strictEqual(blog._id, undefined)
     })
   })
+
 })
 
-describe('Create new blog post test', () => {
-  test('test create new blog', async () => {
+describe('Adding new blog post', () => {
+  test('success create new blog', async () => {
 
     const newBlog =  {
       title: 'Test new bogpost feat',
@@ -59,7 +60,7 @@ describe('Create new blog post test', () => {
     assert(titleAtEnd.includes('Test new bogpost feat'))
   })
 
-  test('test like value default to 0', async () => {
+  test('test missing like value default to 0', async () => {
     const blogWithoutLike =  {
       title: 'Test new bogpost feature without like',
       author: 'Khajan',
@@ -71,10 +72,11 @@ describe('Create new blog post test', () => {
       .expect(201)
       .expect('Content-Type', /application\/json/)
 
-    const allBlogData = await helper.blogInDb()
-    const updatedBlogId = allBlogData.find((n) => n.id === response.body.id )
+    const blogAtEnd = await helper.blogInDb()
+    const updatedBlogId = blogAtEnd.find((n) => n.id === response.body.id )
 
     assert.strictEqual(updatedBlogId.likes, 0)
+    assert.strictEqual(blogAtEnd.length, helper.initialBlogs.length + 1)
   })
 
   test('test new blog without title', async () => {
@@ -88,6 +90,9 @@ describe('Create new blog post test', () => {
       .send(blogWithoutTitle)
       .expect(400)
       .expect('Content-Type', /application\/json/)
+
+    const blogAtEnd = await helper.blogInDb()
+    assert.strictEqual(blogAtEnd.length, helper.initialBlogs.length)
   })
 
   test('test new blog without url', async () => {
@@ -101,8 +106,27 @@ describe('Create new blog post test', () => {
       .send(blogWithoutUrl)
       .expect(400)
       .expect('Content-Type', /application\/json/)
+
+    const blogAtEnd = await helper.blogInDb()
+    assert.strictEqual(blogAtEnd.length, helper.initialBlogs.length)
   })
 
+})
+
+describe('Deleting new blog post', () => {
+  test('sucess deleted blog post id with status 204', async () => {
+    const blogAtStart = await helper.blogInDb()
+    const blogToDelete = blogAtStart[0]
+
+    await api.delete(`/api/blogs/${blogToDelete.id}`).expect(204)
+
+    const blogAtEnd = await helper.blogInDb()
+
+    const ids = blogAtEnd.map(n => n.id)
+    assert(!ids.includes(blogToDelete.id))
+
+    assert.strictEqual(blogAtEnd.length, helper.initialBlogs.length - 1)
+  })
 })
 
 after(async () => {
