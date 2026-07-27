@@ -37,6 +37,30 @@ describe('Blogs tests', () => {
   })
 })
 
+describe('Create new blog post test', () => {
+  test('test create new blog', async () => {
+
+    const newBlog =  {
+      title: 'Test new bogpost feat',
+      author: 'Khajan Bisht',
+      url: 'https://test.com/',
+      likes: 5
+    }
+
+    await api.post('/api/blogs')
+      .send(newBlog)
+      .expect(201)
+      .expect('Content-Type', /application\/json/)
+    
+    const blogAtEnd = await helper.blogInDb()
+    assert.strictEqual(blogAtEnd.length, helper.initialBlogs.length + 1)
+
+    const titleAtEnd = blogAtEnd.map((n) => n.title)
+    assert(titleAtEnd.includes('Test new bogpost feat'))
+  })
+
+})
+
 after(async () => {
   await mongoose.connection.close()
 })
