@@ -77,6 +77,32 @@ describe('Create new blog post test', () => {
     assert.strictEqual(updatedBlogId.likes, 0)
   })
 
+  test('test new blog without title', async () => {
+    const blogWithoutTitle =  {
+      author: 'Without title',
+      url: 'https://test.com/',
+      likes: 2
+    }
+
+    await api.post('/api/blogs')
+      .send(blogWithoutTitle)
+      .expect(400)
+      .expect('Content-Type', /application\/json/)
+  })
+
+  test('test new blog without url', async () => {
+    const blogWithoutUrl =  {
+      author: 'Without url',
+      title: 'This post is without url',
+      likes: 3
+    }
+
+    await api.post('/api/blogs')
+      .send(blogWithoutUrl)
+      .expect(400)
+      .expect('Content-Type', /application\/json/)
+  })
+
 })
 
 after(async () => {
