@@ -26,6 +26,15 @@ describe('Blogs tests', () => {
 
     assert.strictEqual(response.body.length, helper.initialBlogs.length)
   })
+
+  test('unique id of blog post', async () => {
+    const response = await api.get('/api/blogs')
+
+    response.body.forEach(blog => {
+      assert(blog.id)
+      assert.strictEqual(blog._id, undefined)
+    })
+  })
 })
 
 after(async () => {
