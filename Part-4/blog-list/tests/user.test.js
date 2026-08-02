@@ -91,6 +91,7 @@ describe('when there is initially one user in db', () => {
       password: 'se',
     }
 
+    
     const result = await api
       .post('/api/users')
       .send(newUser)
@@ -98,12 +99,12 @@ describe('when there is initially one user in db', () => {
       .expect('Content-Type', /application\/json/)
 
     const usersAtEnd = await helper.usersInDb()
-    assert(String(result.body).includes('password'))
+    assert(result.body.error.includes('password'))
     assert.strictEqual(usersAtEnd.length, usersAtStart.length)
   })
 
 })
 
 after(async () => {
-    await mongoose.connection.close()
+  await mongoose.connection.close()
 })
