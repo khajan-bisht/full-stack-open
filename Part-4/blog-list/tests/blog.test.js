@@ -53,7 +53,7 @@ describe('Adding new blog post', () => {
       .expect(201)
       .expect('Content-Type', /application\/json/)
 
-    const blogAtEnd = await helper.blogInDb()
+    const blogAtEnd = await helper.blogsInDb()
     assert.strictEqual(blogAtEnd.length, helper.initialBlogs.length + 1)
 
     const titleAtEnd = blogAtEnd.map((n) => n.title)
@@ -72,7 +72,7 @@ describe('Adding new blog post', () => {
       .expect(201)
       .expect('Content-Type', /application\/json/)
 
-    const blogAtEnd = await helper.blogInDb()
+    const blogAtEnd = await helper.blogsInDb()
     const updatedBlogId = blogAtEnd.find((n) => n.id === response.body.id )
 
     assert.strictEqual(updatedBlogId.likes, 0)
@@ -91,7 +91,7 @@ describe('Adding new blog post', () => {
       .expect(400)
       .expect('Content-Type', /application\/json/)
 
-    const blogAtEnd = await helper.blogInDb()
+    const blogAtEnd = await helper.blogsInDb()
     assert.strictEqual(blogAtEnd.length, helper.initialBlogs.length)
   })
 
@@ -107,7 +107,7 @@ describe('Adding new blog post', () => {
       .expect(400)
       .expect('Content-Type', /application\/json/)
 
-    const blogAtEnd = await helper.blogInDb()
+    const blogAtEnd = await helper.blogsInDb()
     assert.strictEqual(blogAtEnd.length, helper.initialBlogs.length)
   })
 
@@ -115,12 +115,12 @@ describe('Adding new blog post', () => {
 
 describe('Deleting new blog post', () => {
   test('sucess deleted blog post id with status 204', async () => {
-    const blogAtStart = await helper.blogInDb()
+    const blogAtStart = await helper.blogsInDb()
     const blogToDelete = blogAtStart[0]
 
     await api.delete(`/api/blogs/${blogToDelete.id}`).expect(204)
 
-    const blogAtEnd = await helper.blogInDb()
+    const blogAtEnd = await helper.blogsInDb()
 
     const ids = blogAtEnd.map(n => n.id)
     assert(!ids.includes(blogToDelete.id))
@@ -131,7 +131,7 @@ describe('Deleting new blog post', () => {
 
 describe('Update exisiting blog post', () => {
   test('sucess updated blog post id with status 200', async () => {
-    const blogAtStart = await helper.blogInDb()
+    const blogAtStart = await helper.blogsInDb()
     const blogToUpdate = blogAtStart[0]
 
     const updatedBlog = {
@@ -144,7 +144,7 @@ describe('Update exisiting blog post', () => {
       .send(updatedBlog)
       .expect(200)
 
-    const blogAtEnd = await helper.blogInDb()
+    const blogAtEnd = await helper.blogsInDb()
     const updatedBlogId = blogAtEnd.find(n => n.id === blogToUpdate.id )
 
     assert.strictEqual(updatedBlogId.likes, blogToUpdate.likes + 2)
