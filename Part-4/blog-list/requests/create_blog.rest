@@ -1,8 +1,9 @@
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imt6YW5iIiwiaWQiOiI2YTZmYmQxZDI2YTA4ZTVjOWRhMjhkZmQiLCJpYXQiOjE3ODU3MDg0Nzh9.T59SQKj5Hd4Fp-sIroYRLOOmkt_kiOUXnb3ke-vmpZc
 
 {   
-    "title": "Test user300",
+    "title": "Test user500",
     "author": "Test author300",
     "url": "https://www.testing.com"
 }

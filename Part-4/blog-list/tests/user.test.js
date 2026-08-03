@@ -91,7 +91,7 @@ describe('when there is initially one user in db', () => {
       password: 'se',
     }
 
-    
+
     const result = await api
       .post('/api/users')
       .send(newUser)
